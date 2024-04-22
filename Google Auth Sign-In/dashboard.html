@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="dashboard-content">
+            <h2>Welcome to Your Dashboard</h2>
+            <div id="user-profile">
+                <img id="profile-img" src="" alt="Profile Image">
+                <p id="user-name"></p>
+            </div>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIvLBTUvsW_u3ASsfpPbWejKVWjGRGyO8",
+            authDomain: "authentication-act-cfe38.firebaseapp.com",
+            projectId: "authentication-act-cfe38",
+            storageBucket: "authentication-act-cfe38.appspot.com",
+            messagingSenderId: "5515943136",
+            appId: "1:5515943136:web:b259650452ad9a6dec0485"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get Firebase Auth instance
+        const auth = getAuth();
+
+        // Elements
+        const profileImg = document.getElementById("profile-img");
+        const userName = document.getElementById("user-name");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                const displayName = user.displayName;
+                const photoURL = user.photoURL;
+
+                // Set profile image and user name
+                profileImg.src = photoURL;
+                userName.textContent = displayName;
+                
+                // Show dashboard
+                document.body.style.display = "block";
+            } else {
+                // User is signed out
+                // Redirect to login page
+                window.location.href = "index.html";
+            }
+        });
+
+        // Logout button click event
+        logoutBtn.addEventListener("click", () => {
+            console.log("Logout button clicked");
+            signOut(auth).then(() => {
+                // Sign-out successful
+                console.log("User signed out successfully");
+                // Redirect to login page
+                window.location.href = "index.html";
+            }).catch((error) => {
+                // An error happened
+                console.error("Error signing out:", error);
+            });
+        });
+    </script>
+</body>
+
+</html>
